@@ -13,4 +13,4 @@ spring:
 server:
   port: 2024
   servlet:
-    context-path: /Api
+    context-path: /

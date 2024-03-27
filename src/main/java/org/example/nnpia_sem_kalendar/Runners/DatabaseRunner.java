@@ -1,5 +1,6 @@
 package org.example.nnpia_sem_kalendar.Runners;
 
+import org.example.nnpia_sem_kalendar.Entities.Person;
 import org.example.nnpia_sem_kalendar.Repository.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
@@ -23,6 +24,9 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        Person person = new Person();
+        person.setFirstName("Lucie");
+        person.setLastName("Scholzova");
+        this.personRepository.save(person);
     }
 }
