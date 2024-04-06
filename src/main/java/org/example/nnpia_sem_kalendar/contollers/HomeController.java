@@ -6,21 +6,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 
-@Controller
+@RestController
 public class HomeController {
 
     @Autowired
     public KalendarService kalendarService;
 
     @GetMapping("/home")
-    public String greeting(Model model) {
-        model.addAttribute("day", kalendarService.getDay());
-        return "home";
+    public String greeting() {
+        return kalendarService.getDay();
     }
 
     @GetMapping("/getPersons")
-    public String getPersons(Model model) {
-        model.addAttribute("day", kalendarService.getDay());
+    public String getPersons() {
         return "home";
     }
 

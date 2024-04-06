@@ -20,6 +20,8 @@ public class Event {
     @Column
     private String name;
     @Column
+    private String typ;
+    @Column
     private String description;
     @Column(columnDefinition = "TIMESTAMP")
     private LocalDateTime dateTime;

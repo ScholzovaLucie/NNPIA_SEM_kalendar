@@ -9,7 +9,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "ApplicationUser")
+@Table(
+        name = "ApplicationUser",
+        uniqueConstraints = {
+                @UniqueConstraint(columnNames = "username"),
+                @UniqueConstraint(columnNames = "password")
+        }
+)
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -23,9 +29,9 @@ public class ApplicationUser {
     private String lastName;
     @Column
     private String email;
-    @Column
+    @Column(unique=true)
     private String password;
-    @Column
+    @Column(unique=true)
     private String username;
 
     @ManyToOne
