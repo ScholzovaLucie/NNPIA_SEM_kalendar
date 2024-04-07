@@ -25,6 +25,11 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+//        ApplicationUser user = new ApplicationUser();
+//        user.setFirstName("Lucie");
+//        user.setLastName("Scholzova");
+//        user.setUsername("user");
+//        user.setPassword("heslo");
+//        this.userRepository.save(user);
     }
 }

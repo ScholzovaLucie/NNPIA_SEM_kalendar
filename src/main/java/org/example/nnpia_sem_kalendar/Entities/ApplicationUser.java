@@ -29,9 +29,9 @@ public class ApplicationUser {
     private String lastName;
     @Column
     private String email;
-    @Column(unique=true)
+    @Column(unique=true, nullable = false)
     private String password;
-    @Column(unique=true)
+    @Column(unique=true, nullable = false)
     private String username;
 
     @ManyToOne
