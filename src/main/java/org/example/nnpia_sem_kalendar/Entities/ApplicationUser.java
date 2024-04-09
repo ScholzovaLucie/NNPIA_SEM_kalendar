@@ -1,5 +1,6 @@
 package org.example.nnpia_sem_kalendar.Entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class ApplicationUser {
     @Column
     private String email;
     @Column(unique=true, nullable = false)
+    @JsonIgnore
     private String password;
     @Column(unique=true, nullable = false)
     private String username;
