@@ -16,4 +16,8 @@ public class TypEvent {
     private Long id;
     @Column
     private String name;
+
+    @ManyToOne
+    @JoinColumn(name="user_id")
+    private ApplicationUser user;
 }

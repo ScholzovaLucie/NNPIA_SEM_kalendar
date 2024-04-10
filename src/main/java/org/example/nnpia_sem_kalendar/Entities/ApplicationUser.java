@@ -36,17 +36,12 @@ public class ApplicationUser {
     @Column(unique=true, nullable = false)
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name="birthday_id")
-    private Birthday birthday;
-
     @OneToMany(mappedBy = "user")
     private Set<Person> persons = new HashSet<>();
 
-    @ManyToOne
-    @JoinColumn(name="holiday_id")
-    private Holiday holiday;
-
     @OneToMany(mappedBy = "user")
     private Set<Event> events = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<TypEvent> typEvenets = new HashSet<>();
 }
