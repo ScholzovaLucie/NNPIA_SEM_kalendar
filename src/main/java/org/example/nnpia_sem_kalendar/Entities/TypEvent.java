@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "TYPEVENT")
 @AllArgsConstructor
@@ -20,4 +22,7 @@ public class TypEvent {
     @ManyToOne
     @JoinColumn(name="user_id")
     private ApplicationUser user;
+
+    @OneToMany(mappedBy = "typ")
+    private List<Event> events;
 }

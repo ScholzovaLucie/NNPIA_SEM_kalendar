@@ -12,4 +12,7 @@ import java.util.List;
 public interface TypEventsRepository extends JpaRepository<TypEvent, Long> {
     @Query("SELECT t FROM TypEvent t where t.user.id = :id")
     List<TypEvent> getAll(@Param("id") Long id);
+
+    @Query("SELECT t FROM TypEvent t where t.id = :id")
+    TypEvent getById(@Param("id") Long id);
 }

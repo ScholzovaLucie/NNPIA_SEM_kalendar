@@ -28,8 +28,6 @@ public class ApplicationUser {
     private String firstName;
     @Column
     private String lastName;
-    @Column
-    private String email;
     @Column(unique=true, nullable = false)
     @JsonIgnore
     private String password;

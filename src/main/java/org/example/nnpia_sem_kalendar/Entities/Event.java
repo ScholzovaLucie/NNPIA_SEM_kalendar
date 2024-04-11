@@ -24,8 +24,6 @@ public class Event {
     @Column
     private String name;
     @Column
-    private String typ;
-    @Column
     private String description;
     @Column
     @JsonFormat(pattern="yyyy-MM-dd")
@@ -33,6 +31,10 @@ public class Event {
     @Column
     @JsonFormat(pattern="HH:mm")
     private Time time;
+
+    @ManyToOne
+    @JoinColumn(name="typ_id")
+    private TypEvent typ;
 
     @ManyToOne
     @JoinColumn(name="user_id")

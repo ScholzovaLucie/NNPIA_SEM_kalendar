@@ -3,9 +3,11 @@ package org.example.nnpia_sem_kalendar.contollers;
 import org.example.nnpia_sem_kalendar.Entities.ApplicationUser;
 import org.example.nnpia_sem_kalendar.Entities.Event;
 import org.example.nnpia_sem_kalendar.Entities.Person;
+import org.example.nnpia_sem_kalendar.Entities.TypEvent;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
 import org.example.nnpia_sem_kalendar.Repository.EventRepository;
 import org.example.nnpia_sem_kalendar.Repository.PersonRepository;
+import org.example.nnpia_sem_kalendar.Repository.TypEventsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.config.Task;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,9 @@ public class EventController {
 
     @Autowired
     public EventRepository eventRepository;
+
+    @Autowired
+    public TypEventsRepository typEventsRepository;
 
     @GetMapping(value = "/allEvents")
     public List<Event> allEvents(@RequestParam String username, @RequestParam String date) {
@@ -54,6 +59,7 @@ public class EventController {
             @RequestParam String date,
             @RequestParam String name,
             @RequestParam String description,
+            @RequestParam Long typeid,
             @RequestParam String time
     ) {
         LocalDate newdate;
@@ -67,6 +73,7 @@ public class EventController {
                     Integer.valueOf(dayParts[2]));
         }
         ApplicationUser user = userRepository.findByUsername(username);
+        TypEvent typ = typEventsRepository.getById(typeid);
         if(user != null){
             Event newTask = new Event();
             String[] timeParts = time.split(":");
@@ -80,6 +87,7 @@ public class EventController {
             newTask.setDescription(description);
             newTask.setDate(newdate);
             newTask.setTime(newTime);
+            newTask.setTyp(typ);
 
             newTask.setUser(user);
             eventRepository.save(newTask);
@@ -128,6 +136,7 @@ public class EventController {
             @RequestParam String date,
             @RequestParam String name,
             @RequestParam String description,
+            @RequestParam Long typeid,
             @RequestParam String time
     ) {
         LocalDate newdate;
@@ -143,7 +152,7 @@ public class EventController {
         ApplicationUser user = userRepository.findByUsername(username);
         if(user != null){
             Event currEvent = eventRepository.getById(id);
-
+            TypEvent typ = typEventsRepository.getById(typeid);
             String[] timeParts = time.split(":");
 
             Time newTime = new Time(
@@ -156,6 +165,7 @@ public class EventController {
             currEvent.setDescription(description);
             currEvent.setDate(newdate);
             currEvent.setTime(newTime);
+            currEvent.setTyp(typ);
 
             eventRepository.save(currEvent);
 
