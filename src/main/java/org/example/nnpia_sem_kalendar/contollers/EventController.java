@@ -33,7 +33,7 @@ public class EventController {
     public TypEventsRepository typEventsRepository;
 
     @GetMapping(value = "/allEvents")
-    public List<Event> allEvents(@RequestParam String username, @RequestParam String date) {
+    public List<Event> allEvents(@RequestParam String username, @RequestParam String date, @RequestParam Long typeid) {
         ApplicationUser user = userRepository.findByUsername(username);
         LocalDate newdate;
         if(Objects.equals(date, "undefined")){
@@ -45,10 +45,18 @@ public class EventController {
                     Integer.valueOf(dayParts[1]),
                     Integer.valueOf(dayParts[2]));
         }
-        String[] dateParts = date.split("-");
         if(user != null){
-            List<Event> events = eventRepository.getAllByDate(user.getId(), newdate);
+            TypEvent typ = typEventsRepository.getById(typeid);
+
+            List<Event> events;
+            if(typ == null){
+                events = eventRepository.getAllByDate(user.getId(), newdate);
+            }else{
+                events = eventRepository.getAllByDateAndType(user.getId(), newdate, typ);
+            }
             return events;
+
+
         }
         return null;
     }

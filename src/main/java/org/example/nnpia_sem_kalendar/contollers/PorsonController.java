@@ -1,5 +1,6 @@
 package org.example.nnpia_sem_kalendar.contollers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.example.nnpia_sem_kalendar.Entities.ApplicationUser;
 import org.example.nnpia_sem_kalendar.Entities.Person;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
@@ -10,12 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class PorsonController {
@@ -40,10 +44,16 @@ public class PorsonController {
     }
 
     @PutMapping(value = "/updatePerson")
-    public List<Person> updatePerson(@RequestParam String username, @RequestParam Long id, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String birthday) {
+    public List<Person> updatePerson(@RequestParam String username, @RequestParam Long id, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String birthday) throws UnsupportedEncodingException, ParseException, JsonProcessingException {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
             Person currperson = repository.getById(id);
+
+            if(!Objects.equals(firstName, currperson.getFirstName())){
+                currperson.setHoliday(
+                    holidayService.getHolidayDateByName(firstName)
+                );
+            }
 
             String[] birthdayParts = birthday.split("-");
 
