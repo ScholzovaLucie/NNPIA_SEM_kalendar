@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class TypEvent {
+public class TypeTask {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -24,5 +24,5 @@ public class TypEvent {
     private ApplicationUser user;
 
     @OneToMany(mappedBy = "typ")
-    private List<Event> events;
+    private List<Task> events;
 }

@@ -2,18 +2,14 @@ package org.example.nnpia_sem_kalendar.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
+import lombok.ToString;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
 @Table(name = "PERSON")
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class Person {
@@ -35,7 +31,17 @@ public class Person {
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @ToString.Exclude
     private ApplicationUser user;
 
+    @Override
+    public String toString() {
+        return "Person{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", birthday=" + birthday +
+                ", holiday=" + holiday +
+                '}';
+    }
 }
-

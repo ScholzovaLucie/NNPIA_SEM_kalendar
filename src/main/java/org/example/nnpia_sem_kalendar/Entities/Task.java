@@ -2,22 +2,18 @@ package org.example.nnpia_sem_kalendar.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.sql.Time;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.Set;
 
 @Entity
-@Table(name = "EVENT")
-@AllArgsConstructor
+@Table(name = "Task")
 @NoArgsConstructor
 @Data
-public class Event {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -34,11 +30,22 @@ public class Event {
 
     @ManyToOne
     @JoinColumn(name="typ_id")
-    private TypEvent typ;
+    @ToString.Exclude
+    private TypeTask typ;
 
     @ManyToOne
     @JoinColumn(name="user_id")
+    @ToString.Exclude
     private ApplicationUser user;
 
+    @Override
+    public String toString() {
+        return "Task{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                '}';
+    }
 }
-

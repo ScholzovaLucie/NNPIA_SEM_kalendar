@@ -1,39 +1,32 @@
 package org.example.nnpia_sem_kalendar.contollers;
 
 import org.example.nnpia_sem_kalendar.Entities.ApplicationUser;
-import org.example.nnpia_sem_kalendar.Entities.Event;
-import org.example.nnpia_sem_kalendar.Entities.Person;
-import org.example.nnpia_sem_kalendar.Entities.TypEvent;
+import org.example.nnpia_sem_kalendar.Entities.Task;
+import org.example.nnpia_sem_kalendar.Entities.TypeTask;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
-import org.example.nnpia_sem_kalendar.Repository.EventRepository;
-import org.example.nnpia_sem_kalendar.Repository.PersonRepository;
-import org.example.nnpia_sem_kalendar.Repository.TypEventsRepository;
+import org.example.nnpia_sem_kalendar.Repository.TaskRepository;
+import org.example.nnpia_sem_kalendar.Repository.TypeTasksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.config.Task;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Time;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 @RestController
-public class EventController {
+public class TaskController {
     @Autowired
     public ApplicationUserRepository userRepository;
 
     @Autowired
-    public EventRepository eventRepository;
+    public TaskRepository taskRepository;
 
     @Autowired
-    public TypEventsRepository typEventsRepository;
+    public TypeTasksRepository typTasksRepository;
 
-    @GetMapping(value = "/allEvents")
-    public List<Event> allEvents(@RequestParam String username, @RequestParam String date, @RequestParam Long typeid) {
+    @GetMapping(value = "/allTasks")
+    public List<Task> allTasks(@RequestParam String username, @RequestParam String date, @RequestParam Long typeid) {
         ApplicationUser user = userRepository.findByUsername(username);
         LocalDate newdate;
         if(Objects.equals(date, "undefined")){
@@ -46,15 +39,15 @@ public class EventController {
                     Integer.valueOf(dayParts[2]));
         }
         if(user != null){
-            TypEvent typ = typEventsRepository.getById(typeid);
+            TypeTask typ = typTasksRepository.getById(typeid);
 
-            List<Event> events;
+            List<Task> Tasks;
             if(typ == null){
-                events = eventRepository.getAllByDate(user.getId(), newdate);
+                Tasks = taskRepository.getAllByDate(user.getId(), newdate);
             }else{
-                events = eventRepository.getAllByDateAndType(user.getId(), newdate, typ);
+                Tasks = taskRepository.getAllByDateAndType(user.getId(), newdate, typ);
             }
-            return events;
+            return Tasks;
 
 
         }
@@ -62,7 +55,7 @@ public class EventController {
     }
 
     @PutMapping(value = "/createTask")
-    public List<Event> createTask(
+    public List<Task> createTask(
             @RequestParam String username,
             @RequestParam String date,
             @RequestParam String name,
@@ -81,9 +74,9 @@ public class EventController {
                     Integer.valueOf(dayParts[2]));
         }
         ApplicationUser user = userRepository.findByUsername(username);
-        TypEvent typ = typEventsRepository.getById(typeid);
+        TypeTask typ = typTasksRepository.getById(typeid);
         if(user != null){
-            Event newTask = new Event();
+            Task newTask = new Task();
             String[] timeParts = time.split(":");
             Time newTime = new Time(
                     Integer.valueOf(timeParts[0]),
@@ -98,17 +91,17 @@ public class EventController {
             newTask.setTyp(typ);
 
             newTask.setUser(user);
-            eventRepository.save(newTask);
+            taskRepository.save(newTask);
 
-            List<Event> events = eventRepository.getAllByDate(user.getId(), newdate);
-            return events;
+            List<Task> Tasks = taskRepository.getAllByDate(user.getId(), newdate);
+            return Tasks;
         }
         return null;
 
     }
 
     @DeleteMapping(value = "/removeTask")
-    public List<Event> removeTask(
+    public List<Task> removeTask(
             @RequestParam String username,
             @RequestParam Long id,
             @RequestParam String date
@@ -126,19 +119,19 @@ public class EventController {
         ApplicationUser user = userRepository.findByUsername(username);
 
         if(user != null){
-            Event event = eventRepository.getById(id);
-            if (event != null) {
-                eventRepository.delete(event);
+            Task Task = taskRepository.getById(id);
+            if (Task != null) {
+                taskRepository.delete(Task);
             }
-            List<Event> events = eventRepository.getAllByDate(user.getId(), newdate);
-            return events;
+            List<Task> Tasks = taskRepository.getAllByDate(user.getId(), newdate);
+            return Tasks;
         }
 
         return null;
     }
 
     @PutMapping(value = "/updateTask")
-    public List<Event> updateTask(
+    public List<Task> updateTask(
             @RequestParam String username,
             @RequestParam Long id,
             @RequestParam String date,
@@ -159,8 +152,8 @@ public class EventController {
         }
         ApplicationUser user = userRepository.findByUsername(username);
         if(user != null){
-            Event currEvent = eventRepository.getById(id);
-            TypEvent typ = typEventsRepository.getById(typeid);
+            Task currTask = taskRepository.getById(id);
+            TypeTask typ = typTasksRepository.getById(typeid);
             String[] timeParts = time.split(":");
 
             Time newTime = new Time(
@@ -169,15 +162,15 @@ public class EventController {
                     0);
 
 
-            currEvent.setName(name);
-            currEvent.setDescription(description);
-            currEvent.setDate(newdate);
-            currEvent.setTime(newTime);
-            currEvent.setTyp(typ);
+            currTask.setName(name);
+            currTask.setDescription(description);
+            currTask.setDate(newdate);
+            currTask.setTime(newTime);
+            currTask.setTyp(typ);
 
-            eventRepository.save(currEvent);
+            taskRepository.save(currTask);
 
-            List<Event> persons = eventRepository.getAllByDate(user.getId(), newdate);
+            List<Task> persons = taskRepository.getAllByDate(user.getId(), newdate);
             return persons;
         }
         return null;

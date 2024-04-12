@@ -6,18 +6,13 @@ import org.example.nnpia_sem_kalendar.Entities.Person;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
 import org.example.nnpia_sem_kalendar.Repository.PersonRepository;
 import org.example.nnpia_sem_kalendar.service.NamedayService;
-import org.example.nnpia_sem_kalendar.service.NamedayService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 

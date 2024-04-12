@@ -1,13 +1,10 @@
 package org.example.nnpia_sem_kalendar.contollers;
 
-import com.github.lambdaexpression.annotation.RequestBodyParam;
 import org.example.nnpia_sem_kalendar.Entities.ApplicationUser;
-import org.example.nnpia_sem_kalendar.Entities.Person;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
 import java.util.List;
 
 

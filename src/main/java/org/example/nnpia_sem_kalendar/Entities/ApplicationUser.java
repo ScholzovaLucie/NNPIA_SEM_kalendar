@@ -2,10 +2,11 @@ package org.example.nnpia_sem_kalendar.Entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
+import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +18,6 @@ import java.util.Set;
                 @UniqueConstraint(columnNames = "password")
         }
 )
-@AllArgsConstructor
 @NoArgsConstructor
 @Data
 public class ApplicationUser {
@@ -34,12 +34,25 @@ public class ApplicationUser {
     @Column(unique=true, nullable = false)
     private String username;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
     private Set<Person> persons = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<Event> events = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<Task> events = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<TypEvent> typEvenets = new HashSet<>();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude
+    private Set<TypeTask> typEvents = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "ApplicationUser{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }
