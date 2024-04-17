@@ -5,8 +5,6 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import java.lang.reflect.Type;
 import java.util.HashSet;
 import java.util.Set;
 
