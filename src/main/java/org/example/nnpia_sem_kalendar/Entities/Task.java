@@ -1,6 +1,7 @@
 package org.example.nnpia_sem_kalendar.Entities;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import java.sql.Time;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "Task")
+@Table(name = "TASK")
 @NoArgsConstructor
 @Data
 public class Task {
@@ -29,13 +30,9 @@ public class Task {
     private Time time;
 
     @ManyToOne
-    @JoinColumn(name="typ_id")
-    @ToString.Exclude
-    private TypeTask typ;
-
-    @ManyToOne
     @JoinColumn(name="user_id")
     @ToString.Exclude
+    @JsonIgnore
     private ApplicationUser user;
 
     @Override

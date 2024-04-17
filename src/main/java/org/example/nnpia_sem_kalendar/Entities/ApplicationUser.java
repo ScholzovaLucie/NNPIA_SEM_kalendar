@@ -42,10 +42,6 @@ public class ApplicationUser {
     @ToString.Exclude
     private Set<Task> events = new HashSet<>();
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude
-    private Set<TypeTask> typEvents = new HashSet<>();
-
     @Override
     public String toString() {
         return "ApplicationUser{" +

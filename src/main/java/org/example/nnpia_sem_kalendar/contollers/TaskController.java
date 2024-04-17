@@ -2,10 +2,8 @@ package org.example.nnpia_sem_kalendar.contollers;
 
 import org.example.nnpia_sem_kalendar.Entities.ApplicationUser;
 import org.example.nnpia_sem_kalendar.Entities.Task;
-import org.example.nnpia_sem_kalendar.Entities.TypeTask;
 import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
 import org.example.nnpia_sem_kalendar.Repository.TaskRepository;
-import org.example.nnpia_sem_kalendar.Repository.TypeTasksRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,11 +20,9 @@ public class TaskController {
     @Autowired
     public TaskRepository taskRepository;
 
-    @Autowired
-    public TypeTasksRepository typTasksRepository;
 
-    @GetMapping(value = "/allTasks")
-    public List<Task> allTasks(@RequestParam String username, @RequestParam String date, @RequestParam Long typeid) {
+    @GetMapping(value = "/allTasksByDate")
+    public List<Task> allTasksByDate(@RequestParam String username, @RequestParam String date) {
         ApplicationUser user = userRepository.findByUsername(username);
         LocalDate newdate;
         if(Objects.equals(date, "undefined")){
@@ -39,18 +35,22 @@ public class TaskController {
                     Integer.valueOf(dayParts[2]));
         }
         if(user != null){
-            TypeTask typ = typTasksRepository.getById(typeid);
+            List<Task> Tasks = taskRepository.getAllByDate(user.getId(), newdate);
 
-            List<Task> Tasks;
-            if(typ == null){
-                Tasks = taskRepository.getAllByDate(user.getId(), newdate);
-            }else{
-                Tasks = taskRepository.getAllByDateAndType(user.getId(), newdate, typ);
-            }
             return Tasks;
 
 
         }
+        return null;
+    }
+
+    @GetMapping(value = "/getAllTasks")
+    public List<Task> getAllTasks(@RequestParam String username) {
+        ApplicationUser user = userRepository.findByUsername(username);
+
+        if(user != null)
+            return taskRepository.getAllByUser(user.getId());
+
         return null;
     }
 
@@ -60,7 +60,6 @@ public class TaskController {
             @RequestParam String date,
             @RequestParam String name,
             @RequestParam String description,
-            @RequestParam Long typeid,
             @RequestParam String time
     ) {
         LocalDate newdate;
@@ -74,7 +73,6 @@ public class TaskController {
                     Integer.valueOf(dayParts[2]));
         }
         ApplicationUser user = userRepository.findByUsername(username);
-        TypeTask typ = typTasksRepository.getById(typeid);
         if(user != null){
             Task newTask = new Task();
             String[] timeParts = time.split(":");
@@ -88,7 +86,6 @@ public class TaskController {
             newTask.setDescription(description);
             newTask.setDate(newdate);
             newTask.setTime(newTime);
-            newTask.setTyp(typ);
 
             newTask.setUser(user);
             taskRepository.save(newTask);
@@ -137,7 +134,6 @@ public class TaskController {
             @RequestParam String date,
             @RequestParam String name,
             @RequestParam String description,
-            @RequestParam Long typeid,
             @RequestParam String time
     ) {
         LocalDate newdate;
@@ -153,7 +149,6 @@ public class TaskController {
         ApplicationUser user = userRepository.findByUsername(username);
         if(user != null){
             Task currTask = taskRepository.getById(id);
-            TypeTask typ = typTasksRepository.getById(typeid);
             String[] timeParts = time.split(":");
 
             Time newTime = new Time(
@@ -166,7 +161,6 @@ public class TaskController {
             currTask.setDescription(description);
             currTask.setDate(newdate);
             currTask.setTime(newTime);
-            currTask.setTyp(typ);
 
             taskRepository.save(currTask);
 
