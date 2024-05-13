@@ -1,4 +1,4 @@
-# Kalendářová Aplikace
+Kalendar App BackEnd
 
 Tato kalendářová aplikace je moderní řešení pro správu osobních a pracovních kalendářů. Aplikace umožňuje uživatelům spravovat úkoly, kontakty a další plánované aktivity.
 
