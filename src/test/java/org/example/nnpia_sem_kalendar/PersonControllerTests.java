@@ -15,6 +15,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -57,10 +60,10 @@ public class PersonControllerTests {
         Person person = new Person();
         person.setFirstName("John");
         person.setLastName("Doe");
-        List<Person> persons = Arrays.asList(person);
+        List<Person> persons = List.of(person);
 
         when(userRepository.findByUsername(username)).thenReturn(user);
-        when(personRepository.getAll(user.getId())).thenReturn(persons);
+        when(personRepository.getAll(user.getId(), Pageable.unpaged())).thenReturn(persons);
 
         mockMvc.perform(get("/getAllPersons")
                         .param("username", username))
@@ -69,6 +72,6 @@ public class PersonControllerTests {
                 .andExpect(jsonPath("$[0].firstName").value("John"));
 
         verify(userRepository, times(1)).findByUsername(username);
-        verify(personRepository, times(1)).getAll(user.getId());
+        verify(personRepository, times(1)).getAll(user.getId(), Pageable.unpaged());
     }
 }

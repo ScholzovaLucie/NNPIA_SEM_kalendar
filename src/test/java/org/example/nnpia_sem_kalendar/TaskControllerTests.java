@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -51,7 +52,7 @@ class TaskControllerTests {
 		user.setId(1L);
 
 		when(userRepository.findByUsername(username)).thenReturn(user);
-		when(taskRepository.getAllByDate(user.getId(), parsedDate)).thenReturn(Collections.emptyList());
+		when(taskRepository.getAllByDate(user.getId(), parsedDate, Pageable.unpaged())).thenReturn(Collections.emptyList());
 
 		mockMvc.perform(get("/allTasksByDate")
 						.param("username", username)
@@ -60,7 +61,7 @@ class TaskControllerTests {
 				.andExpect(content().contentType(MediaType.APPLICATION_JSON));
 
 		verify(userRepository, times(1)).findByUsername(username);
-		verify(taskRepository, times(1)).getAllByDate(user.getId(), parsedDate);
+		verify(taskRepository, times(1)).getAllByDate(user.getId(), parsedDate, Pageable.unpaged());
 	}
 
 	@Test

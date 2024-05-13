@@ -7,6 +7,9 @@ import org.example.nnpia_sem_kalendar.Repository.ApplicationUserRepository;
 import org.example.nnpia_sem_kalendar.Repository.PersonRepository;
 import org.example.nnpia_sem_kalendar.service.NamedayService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
@@ -29,17 +32,21 @@ public class PorsonController {
     public NamedayService holidayService;
 
     @GetMapping(value = "/getAllPersons")
-    public List<Person> allUser(@RequestParam String username) {
+    public List<Person> allPersons(@RequestParam String username, Pageable pageable) {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
-            List<Person> persons = repository.getAll(user.getId());
-            return persons;
+            return repository.getAll(user.getId(), pageable);
         }
         return null;
     }
 
     @PutMapping(value = "/updatePerson")
-    public List<Person> updatePerson(@RequestParam String username, @RequestParam Long id, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String birthday) throws UnsupportedEncodingException, ParseException, JsonProcessingException {
+    public List<Person> updatePerson(@RequestParam String username,
+                                     @RequestParam Long id,
+                                     @RequestParam String firstName,
+                                     @RequestParam String lastName,
+                                     @RequestParam String birthday,
+                                     Pageable pageable) throws UnsupportedEncodingException, ParseException, JsonProcessingException {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
             Person currperson = repository.getById(id);
@@ -55,22 +62,25 @@ public class PorsonController {
             currperson.setFirstName(firstName);
             currperson.setLastName(lastName);
             currperson.setBirthday(LocalDate.of(
-                    Integer.valueOf(birthdayParts[0]),
-                    Integer.valueOf(birthdayParts[1]),
-                    Integer.valueOf(birthdayParts[2]))
+                    Integer.parseInt(birthdayParts[0]),
+                    Integer.parseInt(birthdayParts[1]),
+                    Integer.parseInt(birthdayParts[2]))
             );
 
             repository.save(currperson);
 
-            List<Person> persons = repository.getAll(user.getId());
-            return persons;
+            return repository.getAll(user.getId(), pageable);
         }
         return null;
 
     }
 
     @PutMapping(value = "/createPerson")
-    public List<Person> createPerson(@RequestParam String username, @RequestParam String firstName, @RequestParam String lastName, @RequestParam String birthday) {
+    public List<Person> createPerson(@RequestParam String username,
+                                     @RequestParam String firstName,
+                                     @RequestParam String lastName,
+                                     @RequestParam String birthday,
+                                     Pageable pageable) {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
             Person newPerson = new Person();
@@ -79,21 +89,20 @@ public class PorsonController {
             newPerson.setFirstName(firstName);
             newPerson.setLastName(lastName);
             newPerson.setBirthday(LocalDate.of(
-                    Integer.valueOf(birthdayParts[0]),
-                    Integer.valueOf(birthdayParts[1]),
-                    Integer.valueOf(birthdayParts[2])));
+                    Integer.parseInt(birthdayParts[0]),
+                    Integer.parseInt(birthdayParts[1]),
+                    Integer.parseInt(birthdayParts[2])));
 
             try{
                 LocalDate holiday = holidayService.getHolidayDateByName(firstName);
                 newPerson.setHoliday(holiday);
-            }catch (Exception e){
+            }catch (Exception ignored){
 
             }
             newPerson.setUser(user);
             repository.save(newPerson);
 
-            List<Person> persons = repository.getAll(user.getId());
-            return persons;
+            return repository.getAll(user.getId(), pageable);
         }
         return null;
 
@@ -101,15 +110,16 @@ public class PorsonController {
 
 
     @DeleteMapping(value = "/removePerson")
-    public List<Person> removePerson(@RequestParam Long id, @RequestParam String username) {
+    public List<Person> removePerson(@RequestParam Long id,
+                                     @RequestParam String username,
+                                     Pageable pageable) {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
         Person person = repository.getById(id);
         if (person != null) {
             repository.delete(person);
         }
-            List<Person> persons = repository.getAll(user.getId());
-            return persons;
+            return repository.getAll(user.getId(), pageable);
         }
 
         return null;
@@ -119,7 +129,7 @@ public class PorsonController {
     public Person getClosestBirthday(@RequestParam String username) {
         ApplicationUser user = UserRepository.findByUsername(username);
         if (user != null) {
-            List<Person> persons = repository.getAll(user.getId());
+            List<Person> persons = repository.getAll(user.getId(), PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "lastName")));
             LocalDate today = LocalDate.now();
             Person closestPerson = null;
             long smallestDiff = Long.MAX_VALUE;
@@ -153,7 +163,7 @@ public class PorsonController {
     public Person getClosestNameDay(@RequestParam String username) {
         ApplicationUser user = UserRepository.findByUsername(username);
         if (user != null) {
-            List<Person> persons = repository.getAll(user.getId());
+            List<Person> persons = repository.getAll(user.getId(), PageRequest.of(0, 1, Sort.by(Sort.Direction.ASC, "lastName")));
             LocalDate today = LocalDate.now();
             Person closestPerson = null;
             long smallestDiff = Long.MAX_VALUE;
@@ -181,6 +191,15 @@ public class PorsonController {
             return closestPerson;
         }
         return null;
+    }
+
+    @GetMapping(value = "/getCountOfPerson")
+    public int getCount(@RequestParam String username) {
+        ApplicationUser user = UserRepository.findByUsername(username);
+        if(user != null){
+            return repository.getAll(user.getId(), Pageable.unpaged()).size();
+        }
+        return 0;
     }
 
 
