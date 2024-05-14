@@ -116,10 +116,10 @@ public class PorsonController {
         ApplicationUser user = UserRepository.findByUsername(username);
         if(user != null){
         Person person = repository.getById(id);
-        if (person != null) {
+        if (person != null)
             repository.delete(person);
-        }
-            return repository.getAll(user.getId(), pageable);
+
+        return repository.getAll(user.getId(), pageable);
         }
 
         return null;
